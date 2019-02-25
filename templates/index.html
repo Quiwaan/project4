@@ -4,8 +4,16 @@
 	<title>Question & Answer</title>
   </head>
   <body>
-	<h1>Question</h1>
-	<hr />
-	<footer> Quiwaan Little, 2018</footer>
-  </body>
- </html>
+    <h1>Question and Answer</h1>
+    <div class="content">
+    {% for question in questions %}
+        <div class="question">
+            <a href="/question/{{ question.qid }}/{{ question.slug }}"><h1>{{ question.question_title }}</h1></a>
+            <p>{{ question.question_text|truncatechars:300|slice:"-4" }}...</p>
+        </div>
+    {% endfor %}
+    </div>
+    <footer> Quiwaan Little, 2018</footer>
+    </body>
+    </html>
+  
