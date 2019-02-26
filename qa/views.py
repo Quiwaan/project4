@@ -1,6 +1,8 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect 
-from .models import Question
+from qa.models import *
+from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 import json, markdown2, bleach
 
 # Create your views here.
@@ -13,13 +15,15 @@ def index(request):
 def askquestion(request):
     if request.method == 'POST':
         try: 
+            user = request.user
             title = request.POST.get('title')
             question = request.POST.get('question')
             posted_by = request.POST.get('posted_by')
-            q = Question(question_title=title, question_text=question, posted_by=posted_by)
+            q = Question(question_title=title, question_text=question, posted_by=posted_by, user=request.user)
+            print(title, question, posted_by)
             q.save()
-            return redirect(viewquestion, q.qid, q.slug)
-        except:
+            return redirect(showquestion, q.qid, q.slug)
+        except Exception as e:
             return render(request, 'ask-question.html', {'error': 'something wrong with form'})
     else:
         return render(request, 'ask-question.html', {})

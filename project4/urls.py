@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from qa import views
+from qa.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index')
+    path('', index),
+    path('question/<int:qid>/<slug:qslug>', showquestion),
+    path('ask-question', askquestion),
 ]
