@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect 
 from .models import Question
+import json, markdown2, bleach
 
 # Create your views here.
 
@@ -12,13 +13,29 @@ def index(request):
 def askquestion(request):
     if request.method == 'POST':
         try: 
-            q = Question(question_title=title, question_text=question, posted_by=posted_by)
             title = request.POST.get('title')
             question = request.POST.get('question')
             posted_by = request.POST.get('posted_by')
+            q = Question(question_title=title, question_text=question, posted_by=posted_by)
             q.save()
             return redirect(viewquestion, q.qid, q.slug)
         except:
             return render(request, 'ask-question.html', {'error': 'something wrong with form'})
     else:
-        return render(request, 'ask-question.html', {} )
+        return render(request, 'ask-question.html', {})
+
+def showquestion(request, qid, qslug):
+    context = {}
+    question = Question.objects.get(qid=qid, qslug=qslug)
+
+    question_json = json.loads(serializers.serialize('json', [question])) [0] ['fields']
+    question_json['qid'] = question.qid
+    question_json['date_posted'] = question.date_posted
+    question_json['question_text'] = bleach.clean(markdown2.markdown(question_json['question_text']), tags=['p', 'pre','code', 'sup', 'strong', 'hr', 'sub', 'a'])
+    context['question'] = question_json
+    context['answers'] = []
+    answers = Answer.objects.filter(qid=qid)
+    for answer in answers:
+        answer.answer_text = bleach.clean(markdown2.markdown(answer.answer_text), tags=['p', 'pre','code', 'sup', 'strong', 'hr', 'sub', 'a'])
+        context['answers'].append(answer)
+    return render(request, 'view-question.html', context)
