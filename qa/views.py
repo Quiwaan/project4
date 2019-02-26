@@ -30,7 +30,7 @@ def askquestion(request):
 
 def showquestion(request, qid, qslug):
     context = {}
-    question = Question.objects.get(qid=qid, qslug=qslug)
+    question = Question.objects.get(qid=qid, slug=qslug)
 
     question_json = json.loads(serializers.serialize('json', [question])) [0] ['fields']
     question_json['qid'] = question.qid
@@ -42,4 +42,4 @@ def showquestion(request, qid, qslug):
     for answer in answers:
         answer.answer_text = bleach.clean(markdown2.markdown(answer.answer_text), tags=['p', 'pre','code', 'sup', 'strong', 'hr', 'sub', 'a'])
         context['answers'].append(answer)
-    return render(request, 'view-question.html', context)
+    return render(request, 'show-question.html', context)
