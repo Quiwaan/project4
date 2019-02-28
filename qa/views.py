@@ -28,9 +28,10 @@ def askquestion(request):
     else:
         return render(request, 'ask-question.html', {})
 
-def showquestion(request, qid, qslug):
+def showquestion(request, qslug, qid):
     context = {}
     question = Question.objects.get(qid=qid, slug=qslug)
+    print(qid, qslug)
 
     question_json = json.loads(serializers.serialize('json', [question])) [0] ['fields']
     question_json['qid'] = question.qid
@@ -43,3 +44,21 @@ def showquestion(request, qid, qslug):
         answer.answer_text = bleach.clean(markdown2.markdown(answer.answer_text), tags=['p', 'pre','code', 'sup', 'strong', 'hr', 'sub', 'a'])
         context['answers'].append(answer)
     return render(request, 'show-question.html', context)
+
+def answerquestion(request):
+    if request.method == 'POST':
+        # try: 
+            user = request.user
+            answer = request.POST['answer']
+            posted_by = request.POST['posted_by']
+            qid = request.POST['qid_id']
+            slug = request.POST['slug']
+            print(answer, posted_by, qid, slug )
+            
+            a = Answer(answer_text=answer, posted_by=posted_by, user=request.user, qid=Question.objects.get(qid=qid))
+            a.save()
+            return redirect('showquestion', qid=qid, qslug=slug )
+        # except Exception as e:
+        #     return render(request, 'show-question.html', {'error': 'something wrong with form'})
+    else:
+        return render(request, 'show-question.html', {})

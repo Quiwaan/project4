@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path
 from qa.views import *
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
-    path('question/<int:qid>/<slug:qslug>', showquestion),
+    path('question/<int:qid>/<slug:qslug>', showquestion, name="showquestion"),
     path('ask-question', askquestion),
+    path('answer-question', answerquestion, name="answerquestion")
 ]
