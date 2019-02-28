@@ -26,7 +26,7 @@ class Answer(models.Model):
     qid = models.ForeignKey(Question, on_delete=models.CASCADE)
     aid = models.AutoField(primary_key=True)
     posted_by = models.TextField(max_length=50)
-
+    
     def save(self, *args,  **kwargs):
         super(Answer, self).save(*args, **kwargs)
 

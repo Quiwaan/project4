@@ -3,13 +3,19 @@
 
 {% block content %}
 
-<h1>{{ username }}'s collection:</h1>
+<h4>{{ username }}'s Profile:</h4>
+
 
 {% for question in questions %}
-<a href="/{{ answer.aid }}">
-  <h3>{{ question_title }}</h3>
-</a>
+   {{ question.question_text }}
+{% endfor %}
 
+<hr/>
+{% for answer in answers %}
+  <a href="/{{answer.qid_id}}">
+   {{ answer.answer_text }}
+  </a>
+<hr/>
 {% endfor %}
 
 {% endblock %}

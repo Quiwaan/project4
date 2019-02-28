@@ -1,5 +1,6 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect 
+from django.urls import reverse
 from qa.models import *
 from django.contrib.auth.models import User
 from django.contrib import auth
@@ -67,8 +68,13 @@ def answerquestion(request):
 
 def profile(request, username):
     user = User.objects.get(username=username)
-    answer = Answer.objects.filter(user=user)
-    return render(request, 'profile.html', {'username': username, 'answer': answer})
+    answers = Answer.objects.filter(user=user)
+    questions = Question.objects.filter(user=user)
+    for answer in answers:
+        print(answer.answer_text)
+    for question in questions:
+        print(question.question_text)
+    return render(request, 'profile.html', {'username': username, 'answers': answers, 'questions': questions})
 
 def login(request):
 	context = {'error':False}
@@ -80,7 +86,7 @@ def login(request):
 		try:
 			user = auth.authenticate(username=username, password=password)
 			auth.login(request, user)
-			return HttpResponseRedirect(reverse('polls:index'))
+			return HttpResponseRedirect(reverse('index'))
 		except:
 			context['error'] = 'Invalid Login Credentials'
 			return render(request, 'login.html', context)
@@ -88,7 +94,7 @@ def login(request):
 def signup(request):
 	context = {'error':False}
 	if request.method == 'GET':
-		return render(request, 'polls/signup.html', context)
+		return render(request, 'signup.html', context)
 	if request.method == 'POST':
 		print(request.POST)
 		username = request.POST['username']
@@ -96,27 +102,13 @@ def signup(request):
 		try:
 			user = User.objects.create_user(username=username, password=password)
 			auth.login(request, user)
-			return HttpResponseRedirect(reverse('polls:index'))
+			return HttpResponseRedirect(reverse('index'))
 		except:
 			context['error'] = f"Username '{username}' already exists."
-			return render(request, 'polls/signup.html', context)
+			return render(request, 'signup.html', context)
 
-def login(request):
-	context = {'error':False}
-	if request.method == 'GET':
-		return render(request, 'polls/login.html')
-	if request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
-		try:
-			user = auth.authenticate(username=username, password=password)
-			auth.login(request, user)
-			return HttpResponseRedirect(reverse('polls:index'))
-		except:
-			context['error'] = 'Invalid Login Credentials'
-			return render(request, 'polls/login.html', context)
 
 def logout(request):
 	auth.logout(request)
-	return HttpResponseRedirect(reverse('polls:login'))
+	return HttpResponseRedirect(reverse('login'))
                 
