@@ -1,6 +1,8 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect 
 from qa.models import *
+from django.contrib.auth.models import User
+from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json, markdown2, bleach
@@ -62,3 +64,59 @@ def answerquestion(request):
         #     return render(request, 'show-question.html', {'error': 'something wrong with form'})
     else:
         return render(request, 'show-question.html', {})
+
+def profile(request, username):
+    user = User.objects.get(username=username)
+    answer = Answer.objects.filter(user=user)
+    return render(request, 'profile.html', {'username': username, 'answer': answer})
+
+def login(request):
+	context = {'error':False}
+	if request.method == 'GET':
+		return render(request, 'login.html')
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+		try:
+			user = auth.authenticate(username=username, password=password)
+			auth.login(request, user)
+			return HttpResponseRedirect(reverse('polls:index'))
+		except:
+			context['error'] = 'Invalid Login Credentials'
+			return render(request, 'login.html', context)
+
+def signup(request):
+	context = {'error':False}
+	if request.method == 'GET':
+		return render(request, 'polls/signup.html', context)
+	if request.method == 'POST':
+		print(request.POST)
+		username = request.POST['username']
+		password = request.POST['password']
+		try:
+			user = User.objects.create_user(username=username, password=password)
+			auth.login(request, user)
+			return HttpResponseRedirect(reverse('polls:index'))
+		except:
+			context['error'] = f"Username '{username}' already exists."
+			return render(request, 'polls/signup.html', context)
+
+def login(request):
+	context = {'error':False}
+	if request.method == 'GET':
+		return render(request, 'polls/login.html')
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+		try:
+			user = auth.authenticate(username=username, password=password)
+			auth.login(request, user)
+			return HttpResponseRedirect(reverse('polls:index'))
+		except:
+			context['error'] = 'Invalid Login Credentials'
+			return render(request, 'polls/login.html', context)
+
+def logout(request):
+	auth.logout(request)
+	return HttpResponseRedirect(reverse('polls:login'))
+                

@@ -23,5 +23,9 @@ urlpatterns = [
     path('', index),
     path('question/<int:qid>/<slug:qslug>', showquestion, name="showquestion"),
     path('ask-question', askquestion),
-    path('answer-question', answerquestion, name="answerquestion")
+    path('answer-question', answerquestion, name="answerquestion"),
+    path('user/<username>/', profile, name='profile'),
+    path('signup', signup, name='signup'),
+    path('login', login, name='login'),
+    path('logout', logout, name='logout')
 ]

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<h1>{{ username }}'s collection:</h1>
+
+{% for question in questions %}
+<a href="/{{ answer.aid }}">
+  <h3>{{ question_title }}</h3>
+</a>
+
+{% endfor %}
+
+{% endblock %}
