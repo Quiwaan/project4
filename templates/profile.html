@@ -4,17 +4,20 @@
 {% block content %}
 
 <h4>{{ username }}'s Profile:</h4>
-
-
-{% for question in questions %}
-   {{ question.question_text }}
-{% endfor %}
-
 <hr/>
+
+<h4>Questions:</h4>
+{% for question in questions %}
+<div class="pro_question">
+  <p> {{ question.question_text }}</p>
+{% endfor %}
+</div>
+
+<h4>Answers:</h4>
 {% for answer in answers %}
-  <a href="/{{answer.qid_id}}">
-   {{ answer.answer_text }}
-  </a>
+<div class="pro_answer">
+  <p> {{ answer.answer_text }} </p>
+</div>
 <hr/>
 {% endfor %}
 

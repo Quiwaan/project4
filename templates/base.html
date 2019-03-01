@@ -2,11 +2,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CatCollectr</title>
+    <title></title>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css">
   </head>
   <body>
+        <!-- <nav>
+                <div class="nav-wrapper">
+                  <a href="#" class="brand-logo center">Logo</a>
+                  <ul id="nav-mobile" class="left hide-on-med-and-down">
+                    <li><a href="">Sass</a></li>
+                    <li><a href="">Components</a></li>
+                    <li><a href="">JavaScript</a></li>
+                  </ul>
+                </div>
+              </nav> -->
     
     {% if user.is_authenticated %}
         <a  href="{% url 'profile' user.username %}">Hello, {{ user.username }}!</a> |
@@ -23,6 +33,7 @@
   	<footer>
     	All Rights Reserved, Quiwaan Little 2019
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="{% static 'app.js' %}"></script>
   </body>

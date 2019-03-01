@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -5,15 +9,31 @@
   </head>
   <body>
     <h1>Question and Answer</h1>
+    <div class="">
+        <h1>Quick Question</h1>
+        <h6>{{ user.username }}'s Question</h6>
+        <form class="" action="ask-question" method="post">
+            {% csrf_token %}
+            <input type="text" name="title" value="" autocomplete="off" placeholder="What's your question's title?"><p />
+            <input type="text" name="question"  placeholder="What's your question?"></input><p />
+            <input type="text" name="posted_by" value="" autocomplete="off" placeholder="Enter your name ..."><p />
+            <input type="submit" name="ask" value="Ask Question">
+        </form>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        </div>
     <div class="content">
+            {% csrf_token %}
+            <h2>questions</h2>
     {% for question in questions %}
+    
         <div class="question">
             <a href="/question/{{ question.qid }}/{{ question.slug }}"><h1>{{ question.question_title }}</h1></a>
             <p>{{ question.question_text|truncatechars:300|slice:"-4" }}...</p>
         </div>
     {% endfor %}
     </div>
-    <footer> Quiwaan Little, 2018</footer>
     </body>
     </html>
-  
+    {% endblock %}
