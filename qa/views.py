@@ -15,8 +15,13 @@ import bleach
 
 def index(request):
     context = {}
-    context['questions'] = Question.objects.all()
-    return render(request, 'index.html', context)
+    if request.user.is_authenticated:
+        context['questions'] = Question.objects.all()
+        return render(request, 'index.html', context)
+    else:
+        return render(request, 'login.html', context)
+
+
 
 
 def askquestion(request):

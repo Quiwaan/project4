@@ -1,4 +1,5 @@
-
+{% extends 'layout.html' %}
+{% block content %}
 {% if error %}
 	<strong>{{ error }}</strong>
 {% endif %}
@@ -10,3 +11,5 @@
     <input type="password" name="password" placeholder="password"/>
     <input type="submit" value="Sign Up"/>
 </form>
+
+{% endblock %}
